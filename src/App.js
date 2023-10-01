@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function App() {
   // Estado para armazenar a lista de compras
@@ -15,6 +15,43 @@ export default function App() {
       setItem(""); // Limpa o campo de entrada
     }
   };
+  //Função para adicionar no Local Storage
+  // const adicionarLocalStorage = () => {
+  //   const stringCompras = JSON.stringify(listaCompras);
+  //   localStorage.setItem("compra-Lista", stringCompras);
+  // };
+
+  //useEffect colocando a lista de compras na memória
+
+  useEffect(()=>{
+    if(listaCompras.length>0){
+    const stringCompras = JSON.stringify(listaCompras);
+    localStorage.setItem("compra-Lista", stringCompras);
+  }
+  },[listaCompras])
+
+  // Função para reapresentar a lista na tela
+  // const trazerLista = () => {
+  //   const listaAntiga = JSON.parse(localStorage.getItem("compra-Lista"));
+  //   setListaCompras(listaAntiga);
+  // };
+
+  //UseEffect fazendo a lista renderizar na tela mesmo depois de recarregar
+  useEffect(()=>{
+    if(listaCompras){
+      const listaAntiga = JSON.parse(localStorage.getItem("compra-Lista"));
+      if(listaAntiga){
+        setListaCompras(listaAntiga);
+      }
+    
+    }
+  },[])
+
+  const removerItem = ()=>{
+    localStorage.removeItem("compra-Lista")
+    setListaCompras([])
+  }
+  
 
   return (
     <div>
@@ -26,6 +63,9 @@ export default function App() {
         placeholder="Digite um item"
       />
       <button onClick={adicionarItem}>Adicionar</button>
+      {/* <button onClick={adicionarLocalStorage}>Salvar itens</button> */}
+      {/* <button onClick={trazerLista}>Mostrar lista de novo</button> */}
+      <button onClick={removerItem}>Remover lista completa</button>
 
       <ul>
         {listaCompras.map((compra, index) => (
